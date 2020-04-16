@@ -60,28 +60,6 @@ class GeneralImgixTests(TestCase):
                 "http://test1.imgix.net/media/image/image_0001.jpg?ixlib=django-{0}".format(__version__)
             )
 
-    def test_sharding(self):
-
-        domains = [
-            'test1.imgix.net',
-            'test2.imgix.net',
-            'test3.imgix.net',
-        ]
-
-        with self.settings(IMGIX_DOMAINS=domains):
-            rendered = render_template(
-                "{% load imgix_tags %}"
-                "{% get_imgix 'media/image/image_0001.jpg' %}"
-            )
-            self.assertIn(
-                rendered,
-                [
-                "https://test1.imgix.net/media/image/image_0001.jpg?ixlib=django-{0}".format(__version__),
-                "https://test2.imgix.net/media/image/image_0001.jpg?ixlib=django-{0}".format(__version__),
-                "https://test3.imgix.net/media/image/image_0001.jpg?ixlib=django-{0}".format(__version__),
-                ]
-            )
-
     def test_sign_key(self):
 
         domains = 'test1.imgix.net'

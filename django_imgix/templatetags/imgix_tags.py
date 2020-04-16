@@ -43,10 +43,6 @@ def get_settings_variables():
     except AttributeError:
         sign_key = None
     try:
-        shard_strategy = settings.IMGIX_SHARD_STRATEGY
-    except AttributeError:
-        shard_strategy = None
-    try:
         aliases = settings.IMGIX_ALIASES
     except AttributeError:
         aliases = None
@@ -58,7 +54,7 @@ def get_settings_variables():
         web_proxy = settings.IMGIX_WEB_PROXY_SOURCE
     except AttributeError:
         web_proxy = False
-    return shard_strategy, sign_key, use_https, aliases, format_detect, web_proxy
+    return sign_key, use_https, aliases, format_detect, web_proxy
 
 
 def get_kwargs(alias, aliases, kwargs):
@@ -101,20 +97,10 @@ For reference - https://www.imgix.com/docs/reference
 
 
 You must also put IMGIX_DOMAINS in your settings.py file.
-Thix can be a single domain, e.g.:
+This should be a single domain, e.g.:
 
-        IMGIX_DOMAINS = 'test.imgix.net'
+        IMGIX_DOMAINS = "test.imgix.net"
 
-or a list of domains, if you have sharding enabled in your imgix account, e.g.:
-
-        IMGIX_DOMAINS = [
-            'test-1.imgix.net',
-            'test-2.imgix.net',
-            'test-3.imgix.net',
-        ]
-
-If you do indeed use sharding, you can choose a sharding strategy by setting
-IMGIX_SHARD_STRATEGY in your settings.py file.
 
 If you want to disable HTTPS support, put IMGIX_HTTPS = False in settings.py.
 
@@ -137,16 +123,13 @@ def get_imgix(image_url, alias=None, wh=None, **kwargs):
     args = {}
 
     # Get arguments from settings
-    shard_strategy, sign_key, use_https, aliases,\
+    sign_key, use_https, aliases,\
         format_detect, web_proxy = get_settings_variables()
 
     args['use_https'] = use_https
 
     if sign_key:
         args['sign_key'] = sign_key
-
-    if shard_strategy:
-        args['shard_strategy'] = shard_strategy
 
     # Imgix by default appends ?ixlib=python-<version_number> to the end
     # of the URL, but we don't want that.
