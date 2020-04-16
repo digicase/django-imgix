@@ -133,7 +133,7 @@ def get_imgix(image_url, alias=None, wh=None, **kwargs):
 
     # Imgix by default appends ?ixlib=python-<version_number> to the end
     # of the URL, but we don't want that.
-    args['sign_with_library_version'] = False
+    args['include_library_param'] = False
 
     # Get builder instance
     builder = imgix.UrlBuilder(
