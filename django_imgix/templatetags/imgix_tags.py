@@ -141,6 +141,16 @@ def get_imgix(image_url, alias=None, wh=None, **kwargs):
         **args
     )
 
+    # Django does not allow hyphens in kwarg names for simple tags.
+    # Instead of hyphens, use underscores in the simple tag call,
+    # and here replace them with hyphens to match IMGIX URL API keys
+    # https://docs.imgix.com/apis/url
+    for key, value in kwargs.items():
+        new_key = key.replace('_','-')
+
+        if new_key != key:
+            kwargs[new_key] = kwargs.pop(key)
+
     # Has the wh argument been passed? If yes,
     # set w and h arguments accordingly
     if wh:
